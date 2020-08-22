@@ -3,7 +3,7 @@ var tasksInProgressEl = document.querySelector("#tasks-in-progress");
 var tasksCompletedEl = document.querySelector("#tasks-completed");
 
 //Page Content Selector in order to progam delete buttons
-var pagecContentEl = document.querySelector("#page-content");
+var pageContentEl = document.querySelector("#page-content");
 
 //Create a counter that increments by one each time a task is created
 var taskIdCounter = 0;
@@ -203,7 +203,7 @@ var taskStatusChangeHandler = function(event) {
 };
 
 //Event listener for delete button
-pagecContentEl.addEventListener("click", taskButtonHandler);
+pageContentEl.addEventListener("click", taskButtonHandler);
 
 //Event listener to see if task status changes
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
