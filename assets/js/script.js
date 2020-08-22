@@ -1,3 +1,7 @@
+//Reference Columns
+var tasksInProgressEl = document.querySelector("#tasks-in-progress");
+var tasksCompletedEl = document.querySelector("#tasks-completed");
+
 //Page Content Selector in order to progam delete buttons
 var pagecContentEl = document.querySelector("#page-content");
 
@@ -22,15 +26,40 @@ var taskFormHandler = function(event) {
 
     formEl.reset();
 
-    //package up data as an object
-    var taskDataObj = {
-        name: taskNameInput,
-        type: taskTypeInput
-    };
+    //Save edited tasks
+    var isEdit = formEl.hasAttribute("data-task-id");
 
-    //send as argument to createTaskEl
-    createTaskEl(taskDataObj);
-}
+    //has data attribute, so get task id and call function to complete edit
+    if (isEdit) {
+        var taskId = formEl.getAttribute("data-task-id");
+        completeEditTask(taskNameInput, taskTypeInput, taskId);
+    }
+    //no data attribute, so create object as normal and pass to createTask
+    else {
+        //package up data as an object
+        var taskDataObj = {
+            name: taskNameInput,
+            type: taskTypeInput
+        };
+        createTaskEl(taskDataObj);
+        }
+};
+
+//create edited tasks
+var completeEditTask = function(taskName, taskType, taskId) {
+    //find the matching task list item
+    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+        
+    //set new values
+    taskSelected.querySelector("h3.task-name").textContent = taskName;
+    taskSelected.querySelector("span.task-type").textContent = taskType;
+
+    alert("Task Updated!");
+
+    //reset the form and change the button text back to normal
+    formEl.removeAttribute("data-task-id");
+    document.querySelector("#save-task").textContent = "Add Task";
+};
 
 //Function for Creating Tasks from Given user Input
 var createTaskEl = function(taskDataObj) {
@@ -141,6 +170,7 @@ var editTask = function(taskId) {
     document.querySelector("input[name='task-name']").value = taskName;
     document.querySelector("select[name='task-type']").value = taskType;
     document.querySelector("#save-task").textContent = "Save Task";
+    formEl.setAttribute("data-task-id", taskId);
 
 };
 
@@ -150,5 +180,30 @@ var deleteTask = function(taskId) {
     taskSelected.remove();
 };
 
+//Function to move tasks to other columns
+var taskStatusChangeHandler = function(event) {
+    // get the task item's id
+    var taskId = event.target.getAttribute("data-task-id");
+  
+    // get the currently selected option's value and convert to lowercase
+    var statusValue = event.target.value.toLowerCase();
+  
+    // find the parent task item element based on the id
+    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+
+    if (statusValue === "to do") {
+        tasksToDoEl.appendChild(taskSelected);
+      } 
+      else if (statusValue === "in progress") {
+        tasksInProgressEl.appendChild(taskSelected);
+      } 
+      else if (statusValue === "completed") {
+        tasksCompletedEl.appendChild(taskSelected);
+      }
+};
+
 //Event listener for delete button
 pagecContentEl.addEventListener("click", taskButtonHandler);
+
+//Event listener to see if task status changes
+pageContentEl.addEventListener("change", taskStatusChangeHandler);
