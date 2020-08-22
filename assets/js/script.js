@@ -218,6 +218,8 @@ var dropZoneDragHandler = function(event) {
     var taskListEl = event.target.closest(".task-list");
     if (taskListEl) {
     event.preventDefault();
+    //highlight column when task hovers over it
+    taskListEl.setAttribute("style", "background: rgba(68, 233, 255, 0.7); border-style: dashed;");
     }
 };
 
@@ -240,9 +242,19 @@ var dropTaskHandler = function(event) {
     else if (statusType === "tasks-completed") {
         statusSelectEl.selectedIndex = 2;
     }
+    //Remove highlight from column when task is dropped
+    dropZoneEl.removeAttribute("style");
 
     dropZoneEl.appendChild(draggableElement);
-}
+};
+
+//Function to correct hightlights when task hovers over column
+var dragLeaveHandler = function(event) {
+    var taskListEl = event.target.closest(".task-list");
+    if (taskListEl) {
+        taskListEl.removeAttribute("style");
+    }
+};
  
 //Event listener for delete button
 pageContentEl.addEventListener("click", taskButtonHandler);
@@ -258,3 +270,6 @@ pageContentEl.addEventListener("dragover", dropZoneDragHandler);
 
 //Event listener to drop tasks
 pageContentEl.addEventListener("drop", dropTaskHandler);
+
+//Event listener for highlighting columns when task hovers
+pageContentEl.addEventListener("dragleave", dragLeaveHandler);
