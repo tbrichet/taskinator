@@ -71,6 +71,9 @@ var completeEditTask = function(taskName, taskType, taskId) {
     //reset the form and change the button text back to normal
     formEl.removeAttribute("data-task-id");
     document.querySelector("#save-task").textContent = "Add Task";
+
+    //Save tasks to localStorage
+    saveTasks();
 };
 
 //Function for Creating Tasks from Given user Input
@@ -110,6 +113,9 @@ var createTaskEl = function(taskDataObj) {
 
     // increase task counter for next unique id
     taskIdCounter++;
+
+    //Save tasks functon
+    saveTasks();
 }
 
 //Add Buttons and Dropdowns to Each Task
@@ -211,6 +217,9 @@ var deleteTask = function(taskId) {
     }
     //Reassign tasks array to be the same as updatedTaskArr
     tasks = updatedTaskArr;
+
+    //Save tasks to localStorage
+    saveTasks();
 };
 
 
@@ -241,6 +250,9 @@ var taskStatusChangeHandler = function(event) {
             tasks[i].status = statusValue;
         }
     }
+
+    //Save tasks to localStorage
+    saveTasks();
 };
 
 //Function to drag tasks
@@ -291,6 +303,9 @@ var dropTaskHandler = function(event) {
             tasks[i].status - statusSelectEl.value.toLowerCase();
         }
     }
+
+    // Save task to localStorage
+    saveTasks();
  };
 
 //Function to correct hightlights when task hovers over column
@@ -300,6 +315,11 @@ var dragLeaveHandler = function(event) {
         taskListEl.removeAttribute("style");
     }
 };
+
+// Save Tasks in LocalStorage
+var saveTasks = function() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
  
 //Event listener for delete button
 pageContentEl.addEventListener("click", taskButtonHandler);
